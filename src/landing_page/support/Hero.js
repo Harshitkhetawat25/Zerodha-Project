@@ -2,7 +2,11 @@ import React from 'react';
 
 const Hero = () => {
     return(
-        <h1>Hero</h1>
+       <div className='bg-primary text-white p-5'>
+        <div className='row container p-5'>
+            <div className='col '></div>
+        </div>
+       </div>
     )
 }
 
