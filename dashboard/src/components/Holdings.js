@@ -1,6 +1,18 @@
-import React from "react";
-import {holdings} from "../data/data"; // Assuming you have a data file for holdings
+import  { useEffect, useState } from "react";
+import axios from "axios";
+
+
 const Holdings = () => {
+ const [holdings, setHoldings] = useState([]);
+
+ useEffect(() => {
+   axios.get(`${process.env.REACT_APP_BASE_URL}/allHoldings`)
+     .then((res) => {
+       console.log(res.data);
+       setHoldings(res.data);
+     });
+ }, []);
+
   return (
     <>
       <h3 className="title">Holdings ({holdings.length})</h3>
@@ -18,25 +30,23 @@ const Holdings = () => {
             <th>Day Change</th>
           </tr>
           
-          {holdings.map((stock ,index)=>{
-              const curValue = stock.qty * stock.price;
-              const isProfit = curValue - stock.avg * stock.qty > 0;
-              const profClass = isProfit ? "profit" : "loss";
-              const dayClass = stock.isLoss ? "loss" : "profit";
-              return (
-                <tr key={index}>
-                  <td >{stock.name}</td>
-                  <td>{stock.qty}</td>
-                  <td>{stock.avg.toFixed(2)}</td>
-                  <td >{stock.price.toFixed(2)}</td>
-                  <td >{curValue.toFixed(2)}</td>
-                  <td className={profClass} >{(curValue - stock.avg * stock.qty).toFixed(2)}</td>
-                  <td className={profClass}>{stock.net}</td>
-                  <td className={dayClass}>{stock.day}</td>
-                  
-                </tr>
-
-              );
+          {holdings.map((stock, index) => {
+            const curValue = stock.qty * stock.price;
+            const isProfit = curValue - stock.avg * stock.qty > 0;
+            const profClass = isProfit ? "profit" : "loss";
+            const dayClass = stock.isLoss ? "loss" : "profit";
+            return (
+              <tr key={index}>
+                <td>{stock.name}</td>
+                <td>{stock.qty}</td>
+                <td>{stock.avg.toFixed(2)}</td>
+                <td>{stock.price.toFixed(2)}</td>
+                <td>{curValue.toFixed(2)}</td>
+                <td className={profClass}>{(curValue - stock.avg * stock.qty).toFixed(2)}</td>
+                <td className={profClass}>{stock.net}</td>
+                <td className={dayClass}>{stock.day}</td>
+              </tr>
+            );
           })}
         </table>
       </div>

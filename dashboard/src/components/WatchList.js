@@ -1,6 +1,15 @@
-import { watchlist } from "../data/data"; // Assuming you have a data file for watchlist
 import WatchListItem from "./WatchListItem";
+import axios from "axios";
+import {useEffect, useState} from  'react';
 const WatchList = () => {
+  const [watchlists, setWatchlists] = useState([]);
+
+useEffect(()=>{
+  axios.get(`${process.env.REACT_APP_BASE_URL}/allWatchLists`)
+  .then((res)=>{
+    setWatchlists(res.data);
+  })
+})
   return (
     <div className="watchlist-container">
       <div className="search-container">
@@ -11,14 +20,13 @@ const WatchList = () => {
           placeholder="Search eg:infy, bse, nifty fut weekly, gold mcx"
           className="search"
         />
-        <span className="counts">{watchlist.length} / 50 </span>
+        <span className="counts">{watchlists.length} / 50 </span>
       </div>
 
       <ul className="list">
-        {watchlist.map((stock, index)=>{
-          console.log(index)
+        {watchlists.map((stock, index)=>{
           return (
-          <WatchListItem stock={stock} index={index} />
+          <WatchListItem key={stock.name||index} stock={stock} index={index} />
           )
         })}
       </ul>
